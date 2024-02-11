@@ -1,11 +1,27 @@
-import React from 'react';
-import styled from 'styled-components/macro';
+import React from "react";
+import styled from "styled-components/macro";
 
 const PhotoGridItem = ({ id, src, alt, tags }) => {
   return (
     <article>
       <Anchor href={`/photos/${id}`}>
-        <Image alt={alt} src={src} />
+        <picture>
+          <source
+            type="image/avif"
+            srcSet={`${src.replace(".jpg", ".avif")} 1x
+              ${src.replace(".jpg", "@2x.avif")} 2x,
+              ${src.replace(".jpg", "@3x.avif")} 3x`}
+          />
+          <source
+            type="image/jpg"
+            srcSet={`
+              ${src} 1x
+              ${src.replace(".jpg", "@2x.jpg")} 2x,
+              ${src.replace(".jpg", "@3x.jpg")} 3x
+            `}
+          />
+          <Image alt={alt} src={src} />{" "}
+        </picture>
       </Anchor>
       <Tags>
         {tags.map((tag) => (
@@ -17,7 +33,7 @@ const PhotoGridItem = ({ id, src, alt, tags }) => {
 };
 
 const Anchor = styled.a`
-overflow: hidden;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
   outline-offset: 4px;
@@ -33,23 +49,23 @@ const Image = styled.img`
 `;
 
 const Tags = styled.ul`
-  display: block;
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding:4px 0;
 `;
 
 const Tag = styled.li`
   display: inline;
-  text-wrap: nowrap;
+  padding: 4px 8px;
   background: var(--color-gray-300);
   font-size: 0.875rem;
   font-weight: 475;
   color: var(--color-gray-800);
-  margin-left: 8px;
 
-  &:first-of-type {
-    margin-left: 0px;
-  }
+  &:not(:last-of-type) {
+    margin-right: 8px;
+  };
 `;
 
 export default PhotoGridItem;
